@@ -28,11 +28,6 @@ $("#submitBtn").on("click", function(event) {
 
     database.ref().push(newTrain);
 
-    console.log(newTrain.train);
-    console.log(newTrain.destination);
-    console.log(newTrain.time);
-    console.log(newTrain.frequency);
-
     $("#tNameInput").val("");
     $("#tDestinationInput").val("");
     $("#tTimeInput").val("");
@@ -45,11 +40,6 @@ database.ref().on("child_added", function(trainView) {
   var tDestination = trainView.val().destination;
   var tTime = trainView.val().time;
   var tFrequency = trainView.val().frequency;
-
-  console.log(tName);
-  console.log(tDestination);
-  console.log(tTime);
-  console.log(tFrequency);
 
 
   /* Here I am finding the current time of day in minutes since
@@ -87,8 +77,23 @@ database.ref().on("child_added", function(trainView) {
   /* Now that I have how many minutes are left until the next
   train, I simply add that to the current moment in minutes and
   return format that value to HH:mm and that is the time of the next
-  arrival */
-  var nextArrival = moment().add(minutesLeft, 'm').format("HH:mm");
+  arrival. 
+  
+  Extended this section for determining next arrival to make changes if the first train is scheduled for the future,
+  What I did here was declared the variable next arrival and created a function to determine the next arrival time, passing in 
+  two arguments, a and b. I then call the function below and pass in the current time in minutes and the time of first Train in minutes
+  if the current time is greater than, in minutes, so in otherwords later than the first train time then the current time is calculated, 
+  followed by adding the minutes left until the next arrival to it to calculate the next train time. However i used a Terernary operator to
+  say that if the first train time is later than the current time then the next arrival will be set to the input value for the first train time
+  and the the minutes left till the next arrival is the difference in minutes of the first train time and the current time.*/
+  var nextArrival; 
+  
+  function determineNextArrival(a,b) {
+  a > b ? nextArrival = moment().add(minutesLeft, 'm').format("HH:mm") : (nextArrival = tTime, minutesLeft = b - a);
+  };
+
+  // The function is called here passing in the two arguments.
+  determineNextArrival(tNow, tTrain);
 
   console.log(minutesLeft);
 
