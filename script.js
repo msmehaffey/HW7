@@ -92,6 +92,7 @@ database.ref().on("child_added", function(trainView) {
   a > b ? nextArrival = moment().add(minutesLeft, 'm').format("HH:mm") : (nextArrival = tTime, minutesLeft = b - a);
   };
 
+
   // The function is called here passing in the two arguments.
   determineNextArrival(tNow, tTrain);
 
